@@ -11,10 +11,10 @@ class testPriorityQueue(unittest.TestCase):
     def tearDown(self):
         self.pq.clear()
 
-    def test_isEmpty_false(self):
+    def test_isEmpty_true(self):
         self.assertTrue(self.pq.isEmpty())
 
-    def test_isEmpty_true(self):
+    def test_isEmpty_false(self):
         self.pq.insert([1], 'ab')
         self.assertFalse(self.pq.isEmpty())
         
@@ -38,3 +38,4 @@ class testPriorityQueue(unittest.TestCase):
         self.assertEquals(out1, ([1,2,3], 'int', 1))
         out2 = self.pq.pop()
         self.assertEquals(out2, ([1,2], 'cool', 2))
+        

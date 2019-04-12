@@ -11,3 +11,13 @@ Cool Ideas with the Spotify API
 python setup.py install
 
 I am using python 3.7
+
+## if anything goes wrong
+
+Just rerun the python install. It is really annoying
+
+## Status
+
+My Priority Queue BFS is superior
+Artists needed using normal BFS 1792
+Artists needed using genres metric 10
