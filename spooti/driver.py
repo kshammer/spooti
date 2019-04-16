@@ -11,52 +11,53 @@ sp = spotipy.Spotify(client_credentials_manager =client_credentials_manager)
 def how_separate(artist_info):
     artist_ids = get_artist_ids(artist_info['start_info'], artist_info['finish_info'])
     q = queue.Queue()
-    q.put(artist_ids['start_id'])
+    q.put((artist_ids['start_id'], 0))
     v = set()
-    depth = 0
+    artist_seen = 0
     while not q.empty():
-        depth += 1
+        artist_seen += 1
         current = q.get()
-        if current in v:
+        if current[0] in v:
             continue
-        if current == artist_ids['finish_id']:
-            return depth
-        v.add(current)
+        if current[0] == artist_ids['finish_id']:
+            return artist_seen
+        v.add(current[0])
         current_artist = sp.artist(current)
         artist_name = current_artist['name']
         print('Current node is {}'.format(artist_name))
         related_info = sp.artist_related_artists(current)
         related_ids = map(lambda x: x['id'], related_info['artists']) # cool little lambda to get all the ids
+        depth = current[1] + 1
         for artist in list(related_ids):
             if artist not in v:
-                q.put(artist)
-
+                q.put((artist, depth)
 
 def better_how_separate(artist_info):
     pq = PriorityQueue.PriorityQueue()
     artist_bases = get_artist_bases(artist_info['start_info'], artist_info['finish_info'])
     pq.setBase(artist_bases['finish_base'])
     artist_ids = get_artist_ids(artist_info['start_info'], artist_info['finish_info'])
-    pq.insert(artist_bases['start_base'], artist_ids['start_id'])
+    pq.insert(artist_bases['start_base'], artist_ids['start_id'], 0)
     v = set()
-    depth = 0
+    artist_seen = 0
     while not pq.isEmpty():
-        depth += 1
+        artist_seen += 1
         current = pq.pop()
-        current = current[1] # just artist id
-        if current in v:
+        current_id = current[1] # just artist id
+        if current_id in v:
             continue
-        if current == artist_ids['finish_id']:
-            return depth
-        v.add(current)
-        current_artist = sp.artist(current)
+        if current_id == artist_ids['finish_id']:
+            return artist_seen
+        v.add(current_id)
+        current_artist = sp.artist(current_id)
         artist_name = current_artist['name']
         print('Current node is {}'.format(artist_name))
-        related_info = sp.artist_related_artists(current)
+        related_info = sp.artist_related_artists(current_id)
         related_ids_info = map(lambda x: (x['id'], x['genres']), related_info['artists']) # both id and genres
+        depth = current[3] + 1
         for artist in list(related_ids_info):
             if artist[0] not in v:
-                pq.insert(artist[1], artist[0])
+                pq.insert(artist[1], artist[0], depth)
 
 
 def get_artist_info(starter='Death Grips', end = 'Kero Kero Bonito'):
