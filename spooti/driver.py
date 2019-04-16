@@ -24,16 +24,16 @@ def how_separate(artist_info):
         if current[0] == artist_ids['finish_id']:
             return artist_seen, current[1]
         v.add(current[0])
-        current_artist = sp.artist(current)
+        current_artist = sp.artist(current[0])
         artist_name = current_artist['name']
-        print('Current node is {}'.format(artist_name))
-        related_info = sp.artist_related_artists(current)
+        print('Current node is {} and depth {}'.format(artist_name, current[1]))
+        related_info = sp.artist_related_artists(current[0])
         # cool little lambda to get all the ids
         related_ids = map(lambda x: x['id'], related_info['artists'])
         depth = current[1] + 1
         for artist in list(related_ids):
             if artist not in v:
-                q.put((artist, depth)
+                q.put((artist, depth))
 
 
 def better_how_separate(artist_info):
@@ -57,7 +57,7 @@ def better_how_separate(artist_info):
         v.add(current_id)
         current_artist=sp.artist(current_id)
         artist_name=current_artist['name']
-        print('Current node is {}'.format(artist_name))
+        print('Current node is {} and depth {}'.format(artist_name, current[3]))
         related_info=sp.artist_related_artists(current_id)
         # both id and genres
         related_ids_info=map(lambda x: (
