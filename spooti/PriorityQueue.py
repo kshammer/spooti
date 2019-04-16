@@ -21,7 +21,7 @@ class PriorityQueue(object):
         self.base = set(base)
   
     # inserts an element based on how different it is from the base set 
-    def insert(self, data, artist_id, depth):
+    def insert(self, data, artist_id, depth): #gonna change this to take a dict or an object or something 
         data_set = set(data)
         intersection = self.base.intersection(data_set)
         diff = abs(len(self.base) - len(intersection)) # absolute value of the difference between the two sets 

@@ -30,7 +30,7 @@ def how_separate(artist_info):
         related_info = sp.artist_related_artists(current[0])
         # cool little lambda to get all the ids
         related_ids = map(lambda x: x['id'], related_info['artists'])
-        depth = current[1] + 1
+        depth = current[1] + 1 
         for artist in list(related_ids):
             if artist not in v:
                 q.put((artist, depth))
@@ -62,7 +62,7 @@ def better_how_separate(artist_info):
         # both id and genres
         related_ids_info=map(lambda x: (
             x['id'], x['genres']), related_info['artists'])
-        depth=current[3] + 1
+        depth=current[3] + 1 # i don't even know if this works correctly with the pq 
         for artist in list(related_ids_info):
             if artist[0] not in v:
                 pq.insert(artist[1], artist[0], depth)
@@ -90,7 +90,7 @@ if __name__ == '__main__':
     artist_info=get_artist_info()
     lame=how_separate(artist_info)
     print('finished bfs')
-    directed=better_how_separate()
+    directed=better_how_separate(artist_info)
     print('Artists needed using normal bfs {} and furthest depth {}'.format(
         lame[0], lame[1]))
     print('Artists needed using genres metric {} and furthest depth {}'.format(
