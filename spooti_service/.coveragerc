@@ -1,0 +1,3 @@
+[run]
+source = spooti_service
+omit = spooti_service/test*
