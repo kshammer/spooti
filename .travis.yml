@@ -4,5 +4,10 @@ python:
   - '3.7-dev'
 install:
   - python setup.py -q install
+  - pip install coveralls
+  - pip install pytest
+  - pip install pytest-cov
 script:
-  - pytest
+  - pytest --cov=spooti/
+after_success:
+  - coveralls
