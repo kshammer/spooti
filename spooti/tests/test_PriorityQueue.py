@@ -21,13 +21,13 @@ class testPriorityQueue(unittest.TestCase):
     def test_single_pop(self):
         self.pq.insert([1], 'ab', 1)
         out = self.pq.pop()
-        self.assertEquals(out, ([1], 'ab', 3, 1))
+        self.assertEqual(out, ([1], 'ab', 3, 1))
     
     def test_two_pop(self):
         self.pq.insert([1], 'ab', 1)
         self.pq.insert([1,2], 'cool', 1) # should what is popped out because it is closer 
         out = self.pq.pop()
-        self.assertEquals(out, ([1,2], 'cool', 2, 1))
+        self.assertEqual(out, ([1,2], 'cool', 2, 1))
 
     def test_multi_pop(self):
         self.pq.insert([1], 'ab', 1)
@@ -35,7 +35,7 @@ class testPriorityQueue(unittest.TestCase):
         self.pq.insert([4,5,6], 'notcool', 1)
         self.pq.insert([1,2,3], 'int', 1)
         out1 = self.pq.pop()
-        self.assertEquals(out1, ([1,2,3], 'int', 1, 1))
+        self.assertEqual(out1, ([1,2,3], 'int', 1, 1))
         out2 = self.pq.pop()
-        self.assertEquals(out2, ([1,2], 'cool', 2, 1))
+        self.assertEqual(out2, ([1,2], 'cool', 2, 1))
         
