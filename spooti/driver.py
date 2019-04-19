@@ -2,8 +2,15 @@ import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
 from spooti.secret import client_id
 from spooti.secret import client_secret
+from spooti.credentials import Client_ID
+from spooti.credentials import Client_Secret
 import queue
 from spooti import PriorityQueue
+
+# Initialize credentials
+clientId = client_id if Client_ID is None else Client_ID
+clientSecret = client_secret if Client_Secret is None else Client_Secret
+
 client_credentials_manager = SpotifyClientCredentials(
     client_id=client_id, client_secret=client_secret)
 sp = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
