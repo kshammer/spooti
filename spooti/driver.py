@@ -1,7 +1,7 @@
 import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
-from secret import client_id
-from secret import client_secret
+from spooti.secret import client_id
+from spooti.secret import client_secret
 import queue
 import pprint as pp
 from spooti import PriorityQueue
@@ -26,17 +26,31 @@ def how_separate(artist_info):
         if current[0] == artist_ids['finish_id']:
             return artist_seen, current[1]
         v.add(current[0])
-        current_artist = sp.artist(current[0])
+        current_artist = get_current_artist(current[0])
         artist_name = current_artist['name']
-        print('Current node is {} and depth {}'.format(
-            artist_name, current[1]))
-        related_info = sp.artist_related_artists(current[0])
-        # cool little lambda to get all the ids
-        related_ids = map(lambda x: x['id'], related_info['artists'])
+        print_status(artist_name, current[1])
+        related_ids = get_related_ids(current[0])
         depth = current[1] + 1
-        for artist in list(related_ids):
+        for artist in related_ids:
             if artist not in v:
                 q.put((artist, depth))
+
+def get_current_artist(artist_id):
+    return sp.artist(artist_id)
+
+def print_status(name, depth):
+    print('Current node is {} and depth is {}'.format(name, depth))
+
+
+def get_related_ids(artist_id):
+    related_artist_info = sp.artist_related_artists(artist_id)
+    # cool little lambda to get all the ids
+    return list(map(lambda x: x['id'], related_info['artists']))
+
+#There is probably a way to compact these two methods together but idk and I am lazy 
+def get_related_ids_genres(artist_id):
+    related_info = sp.artist_related_artists(artist_id)
+    return list(map(lambda x: (x['id'], x['genres']), related_info['artists']))
 
 
 def better_how_separate(artist_info):
@@ -59,14 +73,10 @@ def better_how_separate(artist_info):
         if current_id == artist_ids['finish_id']:
             return artist_seen, current[3], artist_dict
         v.add(current_id)
-        current_artist = sp.artist(current_id)
+        current_artist = get_current_artist(current_id)
         artist_name = current_artist['name']
-        print('Current node is {} and depth {}'.format(
-            artist_name, current[3]))
-        related_info = sp.artist_related_artists(current_id)
-        # both id and genres
-        related_ids_info = map(lambda x: (
-            x['id'], x['genres']), related_info['artists'])
+        print_status(artist_name, current[3])
+        get_related_ids = get_related_ids_genres(current_id)
         # i don't even know if this works correctly with the pq
         depth = current[3] + 1
         artist_dict[artist_name] = {
@@ -74,7 +84,7 @@ def better_how_separate(artist_info):
             "distance": depth,
             "related": []
         }
-        for artist in list(related_ids_info):
+        for artist in related_ids_info:
             if artist[0] not in v:
                 pq.insert(artist[1], artist[0], depth)
                 artist_dict[artist_name]['related'].append(artist[0])
